@@ -1,1 +1,1 @@
-Hi
+We’re building a canvas where multimodal models turn sketches and references into design components.
