@@ -1,0 +1,32 @@
+# Runtime Context (Generated)
+
+> This file is optional. A harness can regenerate it at session/task start. Never treat it as durable project knowledge.
+
+## Time
+
+- UTC now: [YYYY-MM-DDTHH:MM:SSZ]
+- Relevant timezone: [IANA timezone or N/A]
+- Local now: [YYYY-MM-DDTHH:MM:SS±HH:MM or N/A]
+
+## Environment
+
+- Working directory: [path]
+- Repository root: [path]
+- Branch: [git branch]
+- Commit: [git commit]
+- Dirty working tree: [yes/no]
+- OS: [platform]
+- Runtime versions: [node/python/etc.]
+- Package manager: [npm/pnpm/yarn/uv/etc.]
+
+## Tooling available
+
+- Browser: [yes/no]
+- Web access: [yes/no]
+- Terminal: [yes/no]
+- Tests: [commands]
+
+## Task/session metadata
+
+- Task/session ID: [id]
+- Prior turn state: [path/reference]
