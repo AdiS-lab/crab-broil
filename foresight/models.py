@@ -81,10 +81,14 @@ class VisionRegressor:
         y = np.concatenate([np.log1p(time_to_event(t, e)) for t, _, e in clips])
         self.model = make_pipeline(StandardScaler(), RidgeCV(alphas=np.logspace(-2, 5, 15)))
         self.model.fit(D, y)
+        # A linear model in log space can extrapolate to absurd countdowns on unfamiliar
+        # frames, so cap predictions at 1.5x the longest wait seen in training.
+        self.max_log = float(np.log1p(1.5 * np.expm1(y.max())))
         return self
 
     def predict(self, t: np.ndarray, X: np.ndarray) -> np.ndarray:
-        return np.maximum(np.expm1(self.model.predict(self._inputs(t, X))), 0.0)
+        log_pred = np.clip(self.model.predict(self._inputs(t, X)), 0.0, self.max_log)
+        return np.expm1(log_pred)
 
 
 def smooth_countdown(t: np.ndarray, tte: np.ndarray) -> np.ndarray:

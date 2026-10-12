@@ -22,7 +22,8 @@ Pipeline exists and runs end to end on synthetic clips. No real clips yet.
 
 - [x] Full synthetic run completes and the color model beats the clock on synthetic data
 - [x] Demo video renders
-- [ ] DINOv2 backend runs with real weights (needs huggingface.co access; blocked in the cloud container)
+- [x] DINOv2 code path runs end to end (checked with randomly initialised DINOv2-small weights, 384-d output)
+- [ ] DINOv2 backend runs with real pretrained weights (needs huggingface.co access; blocked in the cloud container)
 - [ ] Real clips filmed, labelled and evaluated
 
 ## Verification
