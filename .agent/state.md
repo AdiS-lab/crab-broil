@@ -1,42 +1,26 @@
 # Working State
 
-> Factual session/project state. Update only when material facts change.
-
 ## Current objective
 
-[Copy the current objective from `task.md`.]
+Vision-only time-to-finish prediction vs a clock baseline (see `task.md`).
 
 ## Status
 
-- Phase: [investigation / implementation / verification / blocked / complete]
-- Last updated: [YYYY-MM-DDTHH:MM:SSZ or harness-provided timestamp]
+- Phase: verification (synthetic); waiting on real clips
 
 ## Completed
 
-- [completed item]
+- `foresight` package: synth, features (color, dinov2), clock + ridge models, leave-one-clip-out evaluate, figure, demo video.
+- Synthetic run (8 clips, seed 0, 2 fps): clock MAE 32.6 s, color 21.1 s, color beats clock on 7/8 clips.
 
 ## Active assumptions
 
-- [ASSUMPTION] [statement + why it is currently believed]
+- [ASSUMPTION] Ridge on causal features is enough for a first result; a GRU head is a possible next step.
 
 ## Verified facts
 
-- [FACT] [statement + evidence/path/source]
-
-## Unresolved blockers
-
-- [blocker]
-
-## Important identifiers
-
-- [ID/path/key that must persist across turns]
-
-## Last verification
-
-- Command/flow: [what was run]
-- Result: [observed result]
-- Evidence: [log/test/path/reference]
+- [FACT] huggingface.co and download.pytorch.org are blocked by the cloud container's network policy, so DINOv2 weights cannot be downloaded there. They download normally on a laptop.
 
 ## Next concrete action
 
-[next smallest action]
+Film 4–5 clips per process (see README filming checklist), write `data/clips/labels.csv`, run `foresight evaluate --backends color,dinov2`.

@@ -1,47 +1,35 @@
 # Active Task
 
-> Replace this file for the current piece of work. Keep it specific.
-
 ## Objective
 
-[One sentence: what must be true when this task is finished?]
+Scaffold and verify a pipeline that trains and evaluates vision-only time-to-finish predictors against a clock baseline, ready to run on clips filmed tonight.
 
 ## Why
 
-[Why this task matters.]
+The research deliverable is due tonight. The thesis: a model can see when a cooking process will finish, not just count time.
 
 ## Current state
 
-[What already exists and what is missing.]
+Pipeline exists and runs end to end on synthetic clips. No real clips yet.
 
 ## Required behavior
 
-1. [behavior]
-2. [behavior]
-3. [behavior]
-
-## Constraints
-
-- [constraint]
-- [constraint]
-
-## Non-goals
-
-- [explicitly out of scope]
-- [explicitly out of scope]
+1. `foresight synth` produces labelled synthetic clips with varied finish times.
+2. `foresight evaluate` extracts features, trains leave-one-clip-out, and writes a results table, per-clip metrics, predictions and a figure.
+3. `foresight demo` renders a countdown overlay video for a held-out clip.
 
 ## Acceptance criteria
 
-- [ ] [criterion]
-- [ ] [criterion]
-- [ ] [criterion]
+- [x] Full synthetic run completes and the color model beats the clock on synthetic data
+- [x] Demo video renders
+- [ ] DINOv2 backend runs with real weights (needs huggingface.co access; blocked in the cloud container)
+- [ ] Real clips filmed, labelled and evaluated
 
 ## Verification
 
-[How the actual result will be checked. Prefer concrete commands and/or a real user flow.]
+`uv run foresight synth && uv run foresight evaluate --labels data/synth/labels.csv`, then inspect `results/summary.md` and `results/countdowns.png`.
 
 ## Known unknowns
 
-- [question requiring investigation]
-
-Remove an item once it is resolved and record durable facts in `.agent/knowledge.md` when useful.
+- Whether real clips vary enough in duration for the clock to fail
+- Whether 4–5 clips per process is enough for DINOv2 + ridge without overfitting

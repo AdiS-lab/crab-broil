@@ -1,67 +1,66 @@
 # Project Context
 
-> Fill this file once when the repository is created. Keep it factual and durable.
-
 ## Name
 
-[PROJECT NAME]
+Foresight (repo: crab-broil)
 
 ## One-line purpose
 
-[What this project does.]
+Predict how many seconds until a cooking process finishes (browning, boiling) from video pixels alone, and test whether that beats simply counting elapsed time.
 
 ## Current stage
 
-[prototype / MVP / production / research / experiment]
+Research prototype for a project due the same day. `PROJECT-IDEA.md` is the original, broader pitch (LLM-built state machines, sampling policy, self-grading); this narrower vision-only thesis replaced it.
 
 ## Stack
 
-- Runtime: [e.g. Node 24]
-- Language: [e.g. TypeScript]
-- Frontend: [e.g. React + Vite]
-- Backend: [e.g. Node / Python / none]
-- Data: [e.g. Supabase / Postgres / none]
-- Deployment: [e.g. Vercel / DigitalOcean / none]
+- Runtime: Python 3.11+, managed with `uv`
+- Video: OpenCV
+- Features: hand-crafted color/texture/motion stats; frozen DINOv2-small via `transformers` + `torch` (optional `deep` extra)
+- Learning: scikit-learn ridge regression
+- Analysis: pandas, matplotlib
+- Backend / data / deployment: none. Local files only.
 
 ## Architecture
 
-[3–10 lines describing the major components and how data moves between them.]
+1. `data.py` reads a labels CSV (one hand label per clip: the second it finishes) and samples frames at 2 fps, cropped to the pan.
+2. `features.py` turns each frame into a feature vector (never the timestamp) and caches it under `cache/`.
+3. `models.py` builds causal inputs (now, change since start, change over the last 10 s) and fits ridge regression on log(seconds left). `ClockBaseline` is the frame-counting baseline from de Boer et al. (ICCVW 2023).
+4. `evaluate.py` runs leave-one-clip-out, scores error, last-60 s error and lock-on time, and writes `results/`.
+5. `demo.py` overlays the held-out countdown on the video.
 
 ## Important directories
 
 | Path | Purpose |
 |---|---|
-| `src/` | [description] |
-| `server/` | [description] |
-| `docs/` | [description] |
+| `foresight/` | the pipeline package |
+| `data/clips/` | real videos + `labels.csv` (gitignored) |
+| `data/synth/` | generated synthetic clips (gitignored) |
+| `cache/`, `results/` | cached features and outputs (gitignored) |
+| `docs/other-projects/` | research for an unrelated project, kept for reference |
 
 ## Important commands
 
 ```text
-Install: [command]
-Dev: [command]
-Build: [command]
-Test: [command]
-Lint: [command]
-Typecheck: [command]
+Install: uv sync [--extra deep]
+Synthetic test: uv run foresight synth && uv run foresight evaluate --labels data/synth/labels.csv
+Real data: uv run foresight evaluate --labels data/clips/labels.csv --backends color,dinov2
+Demo: uv run foresight demo --labels <csv> --clip <id> --model <name>
+Test / lint / typecheck: none set up
 ```
 
 ## Environment
 
-Required variables/configuration:
-
-- `EXAMPLE_API_KEY` — [purpose]
-- `EXAMPLE_URL` — [purpose]
-
-Never put secret values here.
+No API keys. The `dinov2` backend downloads `facebook/dinov2-small` from huggingface.co on first use.
 
 ## Stable constraints
 
-- [constraint]
-- [constraint]
-- [constraint]
+- Vision only at prediction time: no recipe text, no language model, no timer input (except the explicit `clock` baseline and `+clock` variants).
+- Every reported result is leave-one-clip-out and compared against the clock baseline.
+- Predictions are causal: each uses only frames at or before its own time.
 
 ## Explicit non-goals
 
-- [non-goal]
-- [non-goal]
+- Live webcam app, server or UI
+- LLM-generated recipe state machines, sampling policies, self-grading (from `PROJECT-IDEA.md`)
+- Fine-tuning the vision encoder
