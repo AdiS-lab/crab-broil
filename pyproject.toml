@@ -1,0 +1,23 @@
+[project]
+name = "foresight"
+version = "0.1.0"
+description = "Predict when a cooking process will finish from video pixels alone, and check it beats counting the clock."
+requires-python = ">=3.11"
+dependencies = [
+    "numpy",
+    "opencv-python-headless",
+    "pandas",
+    "scikit-learn",
+    "matplotlib",
+]
+
+[project.optional-dependencies]
+# Pretrained vision encoder (DINOv2). Downloads weights from huggingface.co on first use.
+deep = ["torch", "transformers"]
+
+[project.scripts]
+foresight = "foresight.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
